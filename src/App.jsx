@@ -14,8 +14,8 @@ export default function App() {
         <div className="noise" />
         <Background />
         <Sidebar />
-        <main className="ml-64 min-h-screen relative z-10">
-          <div className="max-w-6xl mx-auto px-8 py-10">
+        <main className="lg:ml-64 min-h-screen relative z-10 pb-20 lg:pb-0">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/residents" element={<Residents />} />

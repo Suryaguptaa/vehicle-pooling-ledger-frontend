@@ -41,7 +41,7 @@ export default function Dashboard() {
     <div>
       <PageHeader title="Dashboard" subtitle="Your pooling ledger at a glance" />
 
-      <div className="grid grid-cols-2 gap-4 mb-6 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 mb-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Residents" value={residents.length} icon={Users} color="accent" sub="Registered members" />
         <StatCard label="Groups" value={groups.length} icon={UsersRound} color="positive" sub="Active commute groups" />
         <StatCard label="Total Rides" value={allRides.length} icon={Car} color="warning" sub={`${unsettled} unsettled`} />

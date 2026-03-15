@@ -189,7 +189,7 @@ export default function Rides() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3 mt-3">
+              <div className="grid grid-cols-3 gap-2 mt-3 text-xs sm:text-sm">
                 <div className="px-3 py-2 rounded-xl text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid #1e1e2e' }}>
                   <p className="text-xs text-text-secondary font-body">Total</p>
                   <p className="font-mono font-semibold text-text-primary text-sm">₹{ride.totalFare}</p>

@@ -74,7 +74,7 @@ export default function Stats() {
     <div>
       <PageHeader title="Stats" subtitle="Spending analytics across all groups" />
 
-      <div className="grid grid-cols-2 gap-4 mb-6 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 mb-6 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Total Spend" value={`₹${totalSpend.toFixed(0)}`} icon={IndianRupee} color="accent" />
         <StatCard label="Total Rides" value={allRides.length} icon={Car} color="positive" />
         <StatCard label="Avg Fare" value={`₹${avgFare.toFixed(0)}`} icon={TrendingUp} color="warning" />
@@ -140,7 +140,7 @@ export default function Stats() {
           </ResponsiveContainer>
         )}
 
-        <div className="mt-4 pt-4 grid grid-cols-2 gap-3 lg:grid-cols-4" style={{ borderTop: '1px solid #1e1e2e' }}>
+        <div className="mt-4 pt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4" style={{ borderTop: '1px solid #1e1e2e' }}>
           {residents.map((r, i) => (
             <motion.div key={r.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }} className="flex items-center justify-between px-3 py-2 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid #1e1e2e' }}>
               <div className="flex items-center gap-2">
