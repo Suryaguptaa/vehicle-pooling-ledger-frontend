@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, UsersRound, UserPlus, ChevronDown, ChevronUp } from 'lucide-react'
+import { Plus, UsersRound, UserPlus, ChevronDown, ChevronUp, Copy, Check, LogIn } from 'lucide-react'
 import { groupApi, residentApi } from '../api'
 import { Card, PageHeader, Button, Input, Select, Modal, Loader, EmptyState, BalanceBadge, Badge, Toast } from '../components/UI'
 
@@ -10,6 +10,7 @@ function GroupCard({ group, residents, onRefresh, showToast }) {
   const [addingMember, setAddingMember] = useState(false)
   const [selectedResident, setSelectedResident] = useState('')
   const [loading, setLoading] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   const loadMembers = async () => {
     try {
@@ -36,6 +37,13 @@ function GroupCard({ group, residents, onRefresh, showToast }) {
     }
   }
 
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(group.inviteCode)
+    setCopied(true)
+    showToast('Invite code copied!')
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   const nonMembers = residents.filter(r => !members.find(m => m.id === r.id))
 
   return (
@@ -54,8 +62,16 @@ function GroupCard({ group, residents, onRefresh, showToast }) {
           <Badge variant="accent">#{group.id}</Badge>
         </div>
 
-        <div className="flex gap-2 mt-4">
-          <Button variant="outline" className="flex-1 justify-center text-xs py-2" onClick={() => { setExpanded(!expanded); }}>
+        <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-xl" style={{ background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.1)' }}>
+          <span className="text-xs text-text-secondary font-body">Invite Code:</span>
+          <span className="font-mono text-sm font-semibold text-accent-glow tracking-widest flex-1">{group.inviteCode}</span>
+          <button onClick={handleCopyCode} className="text-text-secondary hover:text-text-primary transition-colors">
+            {copied ? <Check size={14} className="text-positive" /> : <Copy size={14} />}
+          </button>
+        </div>
+
+        <div className="flex gap-2">
+          <Button variant="outline" className="flex-1 justify-center text-xs py-2" onClick={() => setExpanded(!expanded)}>
             {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             {expanded ? 'Hide Members' : 'View Members'}
           </Button>
@@ -77,7 +93,7 @@ function GroupCard({ group, residents, onRefresh, showToast }) {
             <div className="px-5 pb-5" style={{ borderTop: '1px solid #1e1e2e' }}>
               <p className="text-xs text-text-secondary uppercase tracking-widest mt-4 mb-3 font-body">Members & Balances</p>
               {members.length === 0 ? (
-                <p className="text-text-secondary text-sm font-body py-4 text-center">No members in this group yet</p>
+                <p className="text-text-secondary text-sm font-body py-4 text-center">No members yet</p>
               ) : (
                 <div className="space-y-2">
                   {members.map(m => (
@@ -123,10 +139,14 @@ export default function Groups() {
   const [groups, setGroups] = useState([])
   const [residents, setResidents] = useState([])
   const [loading, setLoading] = useState(true)
-  const [modalOpen, setModalOpen] = useState(false)
+  const [createModalOpen, setCreateModalOpen] = useState(false)
+  const [joinModalOpen, setJoinModalOpen] = useState(false)
   const [toast, setToast] = useState(null)
   const [form, setForm] = useState({ name: '', description: '' })
+  const [inviteCode, setInviteCode] = useState('')
   const [submitting, setSubmitting] = useState(false)
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type })
@@ -153,11 +173,27 @@ export default function Groups() {
     try {
       await groupApi.create(form)
       setForm({ name: '', description: '' })
-      setModalOpen(false)
+      setCreateModalOpen(false)
       showToast('Group created successfully')
       load()
     } catch (e) {
       showToast('Failed to create group', 'error')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const handleJoin = async () => {
+    if (!inviteCode) return
+    setSubmitting(true)
+    try {
+      await groupApi.joinByInviteCode(inviteCode.toUpperCase(), user.id)
+      setInviteCode('')
+      setJoinModalOpen(false)
+      showToast('Joined group successfully!')
+      load()
+    } catch (e) {
+      showToast(e.response?.data?.message || 'Invalid invite code', 'error')
     } finally {
       setSubmitting(false)
     }
@@ -171,15 +207,21 @@ export default function Groups() {
         title="Groups"
         subtitle={`${groups.length} commute groups`}
         action={
-          <Button onClick={() => setModalOpen(true)}>
-            <Plus size={16} />
-            New Group
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setJoinModalOpen(true)}>
+              <LogIn size={15} />
+              Join Group
+            </Button>
+            <Button onClick={() => setCreateModalOpen(true)}>
+              <Plus size={16} />
+              New Group
+            </Button>
+          </div>
         }
       />
 
       {groups.length === 0 ? (
-        <EmptyState icon={UsersRound} title="No groups yet" subtitle="Create your first commute group" />
+        <EmptyState icon={UsersRound} title="No groups yet" subtitle="Create a group or join one with an invite code" />
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {groups.map(g => (
@@ -188,13 +230,30 @@ export default function Groups() {
         </div>
       )}
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Create New Group">
+      <Modal open={createModalOpen} onClose={() => setCreateModalOpen(false)} title="Create New Group">
         <div className="space-y-4">
           <Input label="Group Name" placeholder="Morning Commute Crew" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
           <Input label="Description" placeholder="Tower A daily office commute" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
           <div className="flex gap-3 pt-2">
-            <Button variant="outline" onClick={() => setModalOpen(false)} className="flex-1 justify-center">Cancel</Button>
+            <Button variant="outline" onClick={() => setCreateModalOpen(false)} className="flex-1 justify-center">Cancel</Button>
             <Button onClick={handleCreate} loading={submitting} className="flex-1 justify-center">Create Group</Button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal open={joinModalOpen} onClose={() => setJoinModalOpen(false)} title="Join a Group">
+        <div className="space-y-4">
+          <p className="text-xs text-text-secondary font-body">Ask the group admin for the 6-character invite code and enter it below.</p>
+          <Input
+            label="Invite Code"
+            placeholder="ABC123"
+            value={inviteCode}
+            onChange={e => setInviteCode(e.target.value.toUpperCase())}
+            style={{ letterSpacing: '0.2em', textTransform: 'uppercase' }}
+          />
+          <div className="flex gap-3 pt-2">
+            <Button variant="outline" onClick={() => setJoinModalOpen(false)} className="flex-1 justify-center">Cancel</Button>
+            <Button onClick={handleJoin} loading={submitting} className="flex-1 justify-center">Join Group</Button>
           </div>
         </div>
       </Modal>
