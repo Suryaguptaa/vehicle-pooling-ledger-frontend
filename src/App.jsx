@@ -10,14 +10,14 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem('token')
-  if (!token) return <Navigate to="/login" replace />
+//   const token = localStorage.getItem('token')
+//   if (!token) return <Navigate to="/login" replace />
   return children
 }
 
 function PublicRoute({ children }) {
-  const token = localStorage.getItem('token')
-  if (token) return <Navigate to="/" replace />
+//   const token = localStorage.getItem('token')
+//   if (token) return <Navigate to="/" replace />
   return children
 }
 
