@@ -99,6 +99,20 @@ export default function Login() {
           </div>
         </div>
 
+        <div className="rounded-xl p-4 mt-2" style={{ background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.15)' }}>
+          <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#6366f1' }}>Demo Access</p>
+          <div className="space-y-1.5">
+            <p className="text-xs flex justify-between">
+              <span className="text-text-secondary">Email</span>
+              <span className="text-text-primary font-mono">demo@poolledger.com</span>
+            </p>
+            <p className="text-xs flex justify-between">
+              <span className="text-text-secondary">Password</span>
+              <span className="text-text-primary font-mono">demo1234</span>
+            </p>
+          </div>
+        </div>
+
         <p className="text-center text-sm text-text-secondary mt-4">
           Don't have an account?{' '}
           <Link to="/register" className="text-accent-glow hover:underline">Register here</Link>
