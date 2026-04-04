@@ -118,7 +118,7 @@ export default function Sidebar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="lg:hidden fixed inset-0 z-50"
+              className="lg:hidden fixed inset-0 z-[110]"
               style={{ background: 'rgba(0,0,0,0.7)' }}
               onClick={() => setMobileOpen(false)}
             />
@@ -127,7 +127,7 @@ export default function Sidebar() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'tween', duration: 0.25 }}
-              className="lg:hidden fixed left-0 top-0 h-full w-72 z-50 flex flex-col"
+              className="lg:hidden fixed left-0 top-0 h-full w-72 z-[110] flex flex-col"
               style={{ background: 'rgba(10,10,15,0.98)', borderRight: '1px solid #1e1e2e' }}
             >
               <div className="flex items-center justify-between p-5">
