@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Zap } from 'lucide-react'
-import { authApi } from '../api'
+import { authApi, enableDemoMode } from '../api'
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
@@ -35,8 +35,21 @@ export default function Login() {
     }
   }
 
+  const handleSkip = () => {
+    enableDemoMode()
+    localStorage.setItem('token', 'demo-token-123')
+    localStorage.setItem('user', JSON.stringify({
+      id: 1,
+      name: 'Rahul Sharma',
+      email: 'rahul@example.com',
+      flatNumber: 'A-101',
+    }))
+    // Reload so api.js re-evaluates isDemoMode() at module load
+    window.location.href = '/'
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#0a0a0f' }}>
+    <div className="min-h-screen flex items-center justify-center px-4 pt-10" style={{ background: '#0a0a0f' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)', boxShadow: '0 0 20px rgba(99,102,241,0.4)' }}>
@@ -96,19 +109,34 @@ export default function Login() {
             >
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : 'Sign In'}
             </motion.button>
+
+            <div className="flex items-center gap-4 py-2">
+              <div className="h-[1px] flex-1 bg-border" />
+              <span className="text-[10px] text-text-secondary uppercase tracking-widest">or</span>
+              <div className="h-[1px] flex-1 bg-border" />
+            </div>
+
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={handleSkip}
+              className="w-full py-3 rounded-xl text-sm font-medium font-body flex items-center justify-center gap-2 transition-all border border-warning/20 bg-warning/5 text-warning hover:bg-warning/10"
+            >
+              Explore Demo Mode &rarr; Live with Sample Data
+            </motion.button>
           </div>
         </div>
 
         <div className="rounded-xl p-4 mt-2" style={{ background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.15)' }}>
-          <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#6366f1' }}>Demo Access</p>
+          <p className="text-xs uppercase tracking-widest mb-3" style={{ color: '#6366f1' }}>Demo Seed Credentials</p>
+          <p className="text-[10px] text-text-secondary font-body mb-2">Backend offline — use <span className="text-warning">Explore Demo Mode</span> button above, or login with:</p>
           <div className="space-y-1.5">
             <p className="text-xs flex justify-between">
               <span className="text-text-secondary">Email</span>
-              <span className="text-text-primary font-mono">demo@poolledger.com</span>
+              <span className="text-text-primary font-mono">rahul@example.com</span>
             </p>
             <p className="text-xs flex justify-between">
               <span className="text-text-secondary">Password</span>
-              <span className="text-text-primary font-mono">demo1234</span>
+              <span className="text-text-primary font-mono">any 4+ chars</span>
             </p>
           </div>
         </div>

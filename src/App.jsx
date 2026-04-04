@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Sidebar from './components/Sidebar'
 import Background from './components/Background'
+import ServiceStatusBanner from './components/ServiceStatusBanner'
 import Dashboard from './pages/Dashboard'
 import Residents from './pages/Residents'
 import Groups from './pages/Groups'
@@ -24,6 +25,7 @@ function PublicRoute({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <ServiceStatusBanner />
       <Routes>
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
@@ -35,7 +37,7 @@ export default function App() {
               <Background />
               <Sidebar />
               <main className="lg:ml-64 min-h-screen relative z-10">
-                <div className="max-w-6xl mx-auto px-4 py-6 pt-20 lg:pt-10 lg:px-8">
+                <div className="max-w-6xl mx-auto px-4 py-6 pt-24 lg:pt-16 lg:px-8">
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/residents" element={<Residents />} />

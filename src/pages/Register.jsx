@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Zap } from 'lucide-react'
-import { authApi } from '../api'
+import { authApi, enableDemoMode } from '../api'
 
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', flatNumber: '' })
@@ -39,8 +39,21 @@ export default function Register() {
     }
   }
 
+  const handleSkip = () => {
+    enableDemoMode()
+    localStorage.setItem('token', 'demo-token-123')
+    localStorage.setItem('user', JSON.stringify({
+      id: 1,
+      name: 'Rahul Sharma',
+      email: 'rahul@example.com',
+      flatNumber: 'A-101',
+    }))
+    // Reload so api.js re-evaluates isDemoMode() at module load
+    window.location.href = '/'
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#0a0a0f' }}>
+    <div className="min-h-screen flex items-center justify-center px-4 pt-10" style={{ background: '#0a0a0f' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)', boxShadow: '0 0 20px rgba(99,102,241,0.4)' }}>
@@ -123,8 +136,23 @@ export default function Register() {
             >
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : 'Create Account'}
             </motion.button>
+
+            <div className="flex items-center gap-4 py-2">
+              <div className="h-[1px] flex-1 bg-border" />
+              <span className="text-[10px] text-text-secondary uppercase tracking-widest">or</span>
+              <div className="h-[1px] flex-1 bg-border" />
+            </div>
+
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={handleSkip}
+              className="w-full py-3 rounded-xl text-sm font-medium font-body flex items-center justify-center gap-2 transition-all border border-warning/20 bg-warning/5 text-warning hover:bg-warning/10"
+            >
+              Explore Demo Mode (UI Only)
+            </motion.button>
           </div>
         </div>
+
 
         <p className="text-center text-sm text-text-secondary mt-4">
           Already have an account?{' '}

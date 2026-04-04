@@ -92,11 +92,11 @@ export default function Sidebar() {
 
   return (
     <>
-      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 z-40 flex-col" style={{ background: 'rgba(10,10,15,0.95)', borderRight: '1px solid #1e1e2e', backdropFilter: 'blur(20px)' }}>
+      <aside className="hidden lg:flex fixed left-0 top-9 h-[calc(100%-36px)] w-64 z-40 flex-col" style={{ background: 'rgba(10,10,15,0.95)', borderRight: '1px solid #1e1e2e', backdropFilter: 'blur(20px)' }}>
         <NavContent onNavigate={null} />
       </aside>
 
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3" style={{ background: 'rgba(10,10,15,0.95)', borderBottom: '1px solid #1e1e2e', backdropFilter: 'blur(20px)' }}>
+      <header className="lg:hidden fixed top-9 left-0 right-0 z-40 flex items-center justify-between px-4 py-3" style={{ background: 'rgba(10,10,15,0.95)', borderBottom: '1px solid #1e1e2e', backdropFilter: 'blur(20px)' }}>
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #6366f1, #818cf8)' }}>
             <Zap size={16} className="text-white" />
