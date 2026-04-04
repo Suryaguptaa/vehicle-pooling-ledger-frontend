@@ -37,7 +37,7 @@ export default function App() {
               <Background />
               <Sidebar />
               <main className="lg:ml-64 min-h-screen relative z-10">
-                <div className="max-w-6xl mx-auto px-4 py-6 pt-24 lg:pt-16 lg:px-8">
+                <div className="max-w-6xl mx-auto px-4 py-6 pt-[128px] lg:pt-16 lg:px-8">
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/residents" element={<Residents />} />
